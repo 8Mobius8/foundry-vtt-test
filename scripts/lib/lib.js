@@ -154,7 +154,7 @@ Hooks.on('renderPlayerList', (playerList, html) => {
     );
 
     html.on('click', '.todo-list-icon-button', (event) => {
-        ToDoList.log(true, 'Button Clicked!');
+        new ToDoListConfig().render(true, { userId: game.userId })
     });
 });
 
