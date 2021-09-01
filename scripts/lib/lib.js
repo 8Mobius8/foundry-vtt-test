@@ -148,44 +148,82 @@ class ToDoListData {
 Hooks.on('renderPlayerList', (playerList, html) => {
     // find the element which has our logged in user's id
     const loggedInUserListItem = html.find(`[data-user-id="${game.userId}"]`)
-
+  
     // create localized tooltip
-    const tooltip = game.i18n.localize('TODOS-LIST.button-title');
-
+    const tooltip = game.i18n.localize('TODO-LIST.button-title');
+  
     // insert a button at the end of this element
     loggedInUserListItem.append(
-        "<button type='button' class='todo-list-icon-button flex0' title='${tooltip}'><i class='fas fa-tasks'></i></button>"
+      `<button type='button' class='todo-list-icon-button flex0' title="${tooltip}">
+        <i class='fas fa-tasks'></i>
+      </button>`
     );
-
+  
+    // register an event listener for this button
     html.on('click', '.todo-list-icon-button', (event) => {
-        const userId = $(event.currentTarget).parents('[data-user-id]')?.data()?.userId;
-    
-        ToDoList.toDoListConfig.render(true, {userId});
-      });
-});
+      const userId = $(event.currentTarget).parents('[data-user-id]')?.data()?.userId;
+  
+      ToDoList.toDoListConfig.render(true, { userId });
+    });
+  });
 
 class ToDoListConfig extends FormApplication {
     static get defaultOptions() {
-        const defaults = super.defaultOptions;
-
-        const overrides = {
-            closeOnSubmit: false,
-            height: 'auto',
-            id: 'todo-list',
-            submitOnChange: true,
-            template: ToDoList.TEMPLATES.TODOLIST,
-            title: 'To Do List',
-            userId: game.userId,
-        };
-
-        const mergedOptions = foundry.utils.mergeObject(defaults, overrides);
-
-        return mergedOptions;
+      const defaults = super.defaultOptions;
+  
+      const overrides = {
+        closeOnSubmit: false,
+        height: 'auto',
+        id: 'todo-list',
+        submitOnChange: true,
+        template: ToDoList.TEMPLATES.TODOLIST,
+        title: 'To Do List',
+        userId: game.userId,
+      };
+  
+      const mergedOptions = foundry.utils.mergeObject(defaults, overrides);
+  
+      return mergedOptions;
     }
-
-    getData(options) {
-        return {
-            todos: ToDoListData.getToDosForUser(options.userId)
+  
+    async _handleButtonClick(event) {
+      const clickedElement = $(event.currentTarget);
+      const action = clickedElement.data().action;
+      const toDoId = clickedElement.parents('[data-todo-id]')?.data()?.todoId;
+  
+      switch (action) {
+        case 'create': {
+          await ToDoListData.createToDo(this.options.userId);
+          this.render();
+          break;
         }
+  
+        case 'delete': {
+          await ToDoListData.deleteToDo(toDoId);
+          this.render();
+          break;
+        }
+  
+        default:
+          ToDoList.log(false, 'Invalid action detected', action);
+      }
     }
-}
+  
+    activateListeners(html) {
+      super.activateListeners(html);
+  
+      html.on('click', "[data-action]", this._handleButtonClick.bind(this));
+    }
+  
+    getData(options) {
+      return {
+        todos: ToDoListData.getToDosForUser(options.userId)
+      }
+    }
+  
+    async _updateObject(event, formData) {
+      const expandedData = foundry.utils.expandObject(formData);
+  
+      await ToDoListData.updateUserToDos(this.options.userId, expandedData);
+    }
+  }
