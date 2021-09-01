@@ -18,7 +18,7 @@ class ToDoList {
     }
 
     static TEMPLATES = {
-        TODOLIST: `module/${this.ID}/templates/todo-list.hbs`
+        TODOLIST: `modules/${this.ID}/templates/todo-list.hbs`
     }
 
     /**
