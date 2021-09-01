@@ -33,6 +33,10 @@ class ToDoList {
             console.log(this.ID, '|', ...args);
         }
     }
+
+    static initialize() {
+        this.toDoListConfig = new ToDoListConfig();
+    }
 }
 
 Hooks.once('devModeReady', ({ registerPackageDebugFlag }) => {
@@ -154,32 +158,34 @@ Hooks.on('renderPlayerList', (playerList, html) => {
     );
 
     html.on('click', '.todo-list-icon-button', (event) => {
-        new ToDoListConfig().render(true, { userId: game.userId })
-    });
+        const userId = $(event.currentTarget).parents('[data-user-id]')?.data()?.userId;
+    
+        ToDoList.toDoListConfig.render(true, {userId});
+      });
 });
 
 class ToDoListConfig extends FormApplication {
     static get defaultOptions() {
-      const defaults = super.defaultOptions;
-    
-      const overrides = {
-        closeOnSubmit: false,
-        height: 'auto',
-        id: 'todo-list',
-        submitOnChange: true,
-        template: ToDoList.TEMPLATES.TODOLIST,
-        title: 'To Do List',
-        userId: game.userId,
-      };
-    
-      const mergedOptions = foundry.utils.mergeObject(defaults, overrides);
-      
-      return mergedOptions;
+        const defaults = super.defaultOptions;
+
+        const overrides = {
+            closeOnSubmit: false,
+            height: 'auto',
+            id: 'todo-list',
+            submitOnChange: true,
+            template: ToDoList.TEMPLATES.TODOLIST,
+            title: 'To Do List',
+            userId: game.userId,
+        };
+
+        const mergedOptions = foundry.utils.mergeObject(defaults, overrides);
+
+        return mergedOptions;
     }
-  
+
     getData(options) {
-      return {
-        todos: ToDoListData.getToDosForUser(options.userId)
-      }
+        return {
+            todos: ToDoListData.getToDosForUser(options.userId)
+        }
     }
-  }
+}
