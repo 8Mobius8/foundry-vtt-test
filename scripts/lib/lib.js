@@ -152,8 +152,34 @@ Hooks.on('renderPlayerList', (playerList, html) => {
     loggedInUserListItem.append(
         "<button type='button' class='todo-list-icon-button flex0' title='${tooltip}'><i class='fas fa-tasks'></i></button>"
     );
-    
+
     html.on('click', '.todo-list-icon-button', (event) => {
         ToDoList.log(true, 'Button Clicked!');
     });
 });
+
+class ToDoListConfig extends FormApplication {
+    static get defaultOptions() {
+      const defaults = super.defaultOptions;
+    
+      const overrides = {
+        closeOnSubmit: false,
+        height: 'auto',
+        id: 'todo-list',
+        submitOnChange: true,
+        template: ToDoList.TEMPLATES.TODOLIST,
+        title: 'To Do List',
+        userId: game.userId,
+      };
+    
+      const mergedOptions = foundry.utils.mergeObject(defaults, overrides);
+      
+      return mergedOptions;
+    }
+  
+    getData(options) {
+      return {
+        todos: ToDoListData.getToDosForUser(options.userId)
+      }
+    }
+  }
