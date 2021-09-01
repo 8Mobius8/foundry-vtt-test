@@ -21,6 +21,10 @@ class ToDoList {
         TODOLIST: `modules/${this.ID}/templates/todo-list.hbs`
     }
 
+    static SETTINGS = {
+        INJECT_BUTTON: 'inject-button'
+    }
+
     /**
      * A small helper function which leverages deveoper mod flags to gate debug logs.
      * 
@@ -36,6 +40,15 @@ class ToDoList {
 
     static initialize() {
         this.toDoListConfig = new ToDoListConfig();
+
+        game.settings.register(this.ID, this.SETTINGS.INJECT_BUTTON, {
+            name: `TODO-LIST.settings.${this.SETTINGS.INJECT_BUTTON}.Name`,
+            default: true,
+            scope: 'client',
+            config: true,
+            hint: `TODO-LIST.settings.${this.SETTTINGS.INJECT_BUTTON}.Hint`,
+
+        });
     }
 }
 
@@ -146,6 +159,10 @@ class ToDoListData {
 }
 
 Hooks.on('renderPlayerList', (playerList, html) => {
+    if (!game.settings.get(ToDoList.ID, ToDoList.SETTINGS.INJECT_BUTTON)) {
+        return;
+    }
+
     // find the element which has our logged in user's id
     const loggedInUserListItem = html.find(`[data-user-id="${game.userId}"]`)
   

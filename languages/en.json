@@ -4,6 +4,12 @@
         "button-title": "Open To-Do list",
         "add-todo": "Add To-Do",
         "delete-todo": "Delete To-Do",
-        "mark-done": "Mark Done"
+        "mark-done": "Mark Done",
+        "settings": {
+            "inject-button": {
+                "Name": "Display To-Do List button?",
+                "Hint": "Controls whether or not the To-Do list can be opened from the player list."
+            }
+        }
     }
 }
