@@ -1,3 +1,7 @@
 {
-    "MODULE.hello": "hello"
+    "MODULE.hello": "hello",
+    "TODO-LIST": {
+        "button-title": "Open To-Do list"
+    }
+
 }
