@@ -48,6 +48,7 @@ class ToDoList {
           scope: 'client',
           config: true,
           hint: `TODO-LIST.settings.${this.SETTINGS.INJECT_BUTTON}.Hint`,
+          onChange: () => ui.players.render()
         });
     }
 }
