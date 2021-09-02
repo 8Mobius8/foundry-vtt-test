@@ -42,12 +42,12 @@ class ToDoList {
         this.toDoListConfig = new ToDoListConfig();
 
         game.settings.register(this.ID, this.SETTINGS.INJECT_BUTTON, {
-            name: `TODO-LIST.settings.${this.SETTINGS.INJECT_BUTTON}.Name`,
-            default: true,
-            scope: 'client',
-            config: true,
-            hint: `TODO-LIST.settings.${this.SETTTINGS.INJECT_BUTTON}.Hint`,
-
+          name: `TODO-LIST.settings.${this.SETTINGS.INJECT_BUTTON}.Name`,
+          default: true,
+          type: Boolean,
+          scope: 'client',
+          config: true,
+          hint: `TODO-LIST.settings.${this.SETTINGS.INJECT_BUTTON}.Hint`,
         });
     }
 }
