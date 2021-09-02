@@ -217,8 +217,17 @@ class ToDoListConfig extends FormApplication {
         }
   
         case 'delete': {
-          await ToDoListData.deleteToDo(toDoId);
-          this.render();
+          const confirmed = await Dialog.confirm({
+            title : game.i18n.localize("TODO-LIST.confirms.deleteConfirm.Title"),
+            content : game.i18n.localize("TODO-LIST.confirms.deleteConfirm.Content")
+          });
+          
+          if (confirmed) {
+            await ToDoListData.deleteToDo(toDoId);
+            this.render();
+
+          }
+          
           break;
         }
   
